@@ -1,0 +1,31 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    version: 1
+
+  - name: Node Exporter
+    type: prometheus
+    access: proxy
+    url: http://node-exporter:9100
+    isDefault: false
+    editable: false
+    version: 1
+
+  - name: PostgreSQL
+    type: postgres
+    url: postgres:5432
+    user: postgres
+    secureJsonData:
+      password: ${DB_PASSWORD}
+    jsonData:
+      database: ai_startup_creator
+      sslmode: disable
+    isDefault: false
+    editable: false
+    version: 1 

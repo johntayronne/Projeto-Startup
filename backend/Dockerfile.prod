@@ -1,0 +1,40 @@
+# Build stage
+FROM node:18-alpine as builder
+
+WORKDIR /app
+
+# Copiar arquivos de dependência
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar dependências
+RUN npm ci
+
+# Gerar cliente Prisma
+RUN npx prisma generate
+
+# Copiar código fonte
+COPY . .
+
+# Build da aplicação
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copiar dependências e build
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/prisma ./prisma
+
+# Instalar PM2 globalmente
+RUN npm install -g pm2
+
+# Expor porta 3001
+EXPOSE 3001
+
+# Comando para iniciar a aplicação com PM2
+CMD ["pm2-runtime", "start", "ecosystem.config.js"] 

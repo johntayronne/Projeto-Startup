@@ -1,0 +1,19 @@
+{{ define "telegram.default.message" }}
+🚨 *{{ .CommonLabels.alertname }}*
+Status: {{ .Status | toUpper }}
+Severidade: {{ .CommonLabels.severity }}
+
+*Descrição:*
+{{ .CommonAnnotations.description }}
+
+*Detalhes:*
+{{ range .Alerts.Firing }}
+• Instância: `{{ .Labels.instance }}`
+• Início: {{ .StartsAt }}
+{{ if .Annotations.description }}
+• Detalhes: {{ .Annotations.description }}
+{{ end }}
+{{ end }}
+
+_Para mais informações, acesse o painel de monitoramento: https://seudominio.com:3000_
+{{ end }} 

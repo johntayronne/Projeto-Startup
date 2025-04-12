@@ -1,0 +1,6 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [],
+  "sourceMaps": true,
+  "compact": false
+} 

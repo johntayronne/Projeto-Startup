@@ -1,0 +1,97 @@
+{{ define "email.default.subject" }}
+[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "email.default.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ template "email.default.subject" . }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: {{ if eq .Status "firing" }}#ff4444{{ else }}#44ff44{{ end }};
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .alert {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .label {
+            font-weight: bold;
+            color: #666;
+        }
+        .value {
+            color: #333;
+        }
+        .footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ template "email.default.subject" . }}</h1>
+    </div>
+
+    <div class="alert">
+        <h2>Detalhes do Alerta</h2>
+        <p><span class="label">Status:</span> <span class="value">{{ .Status | toUpper }}</span></p>
+        <p><span class="label">Severidade:</span> <span class="value">{{ .CommonLabels.severity }}</span></p>
+        <p><span class="label">Descrição:</span> <span class="value">{{ .CommonAnnotations.description }}</span></p>
+        <p><span class="label">Resumo:</span> <span class="value">{{ .CommonAnnotations.summary }}</span></p>
+    </div>
+
+    {{ if .Alerts.Firing }}
+    <div class="alert">
+        <h2>Alertas Ativos</h2>
+        {{ range .Alerts.Firing }}
+        <div style="margin-bottom: 15px;">
+            <p><span class="label">Instância:</span> <span class="value">{{ .Labels.instance }}</span></p>
+            <p><span class="label">Início:</span> <span class="value">{{ .StartsAt }}</span></p>
+            {{ if .Annotations.description }}
+            <p><span class="label">Detalhes:</span> <span class="value">{{ .Annotations.description }}</span></p>
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+    {{ end }}
+
+    {{ if .Alerts.Resolved }}
+    <div class="alert">
+        <h2>Alertas Resolvidos</h2>
+        {{ range .Alerts.Resolved }}
+        <div style="margin-bottom: 15px;">
+            <p><span class="label">Instância:</span> <span class="value">{{ .Labels.instance }}</span></p>
+            <p><span class="label">Início:</span> <span class="value">{{ .StartsAt }}</span></p>
+            <p><span class="label">Fim:</span> <span class="value">{{ .EndsAt }}</span></p>
+        </div>
+        {{ end }}
+    </div>
+    {{ end }}
+
+    <div class="footer">
+        <p>Este é um alerta automático do sistema de monitoramento.</p>
+        <p>Para mais informações, acesse o painel de monitoramento: <a href="https://seudominio.com:3000">Grafana</a></p>
+    </div>
+</body>
+</html>
+{{ end }} 
