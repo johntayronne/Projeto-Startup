@@ -33,8 +33,8 @@ sudo usermod -aG docker $USER
 
 3. Clone o repositório:
 ```bash
-git clone https://seu-repositorio/ai-startup-creator.git
-cd ai-startup-creator
+git clone https://github.com/johntayronne/Projeto-Startup.git
+cd Projeto-Startup
 ```
 
 4. Configure as variáveis de ambiente:
@@ -146,4 +146,4 @@ Para suporte, entre em contato:
 
 ## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes. 
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
